@@ -139,8 +139,16 @@ int main(int argc, char** argv)
 			int userID;
 			sscanf(buff, "%c %d", &event, &userID);
 			DPRINT("%c %d\n", event, userID);
-
 			if ( unregister_user(userID) ) {
+				int j;
+				user_t *rep;
+				j=hash_function(userID);
+				rep=user_hashtable_p[j];
+				printf("Chain <%d> of Users:\n",j);
+				while(rep!=NULL){
+					printf("\t<%d>\n",rep->userID);
+					rep=rep->next;
+				}
 				DPRINT("DONE\n");
 			} else {
 				fprintf(stderr, "%c %d failed\n", event, userID);

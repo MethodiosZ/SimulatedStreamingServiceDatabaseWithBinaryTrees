@@ -49,7 +49,29 @@
  */
 
  int unregister_user(int userID){
-	 return 1;
+	int key;
+	key=hash_function(userID);
+	if(user_hashtable_p[key]->userID==userID){
+		/*Delete history*/
+		user_hashtable_p[key]=user_hashtable_p[key]->next;
+		return 1;
+	}
+	else{
+		user_t *deluser = user_hashtable_p[key], *preuser = user_hashtable_p[key];
+		while(deluser!=NULL){
+			if(deluser->userID==userID){
+				/*Delete History*/
+				preuser->next=deluser->next;
+				free(deluser);
+				return 1;
+			}
+			else{
+				preuser=deluser;
+				deluser=deluser->next;
+			}
+		}
+	}
+	return 0;
  }
  
  /**
