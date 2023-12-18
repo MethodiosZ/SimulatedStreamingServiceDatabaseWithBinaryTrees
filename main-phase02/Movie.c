@@ -20,6 +20,20 @@
  int register_user(int userID){
 	int key;
 	key=hash_function(userID);
+	user_t *newuser = (user_t*)malloc(sizeof(user_t));
+	if(user_hashtable_p[key]==NULL){
+		newuser->history=NULL;
+		newuser->next=NULL;
+		newuser->userID=userID;
+		user_hashtable_p[key] = newuser; 
+		return 1;
+	}
+	else{
+		newuser->history=NULL;
+		newuser->next=user_hashtable_p[key];
+		newuser->userID=userID;
+		user_hashtable_p[key]=newuser;
+	} 
 	return 1;
  }
  

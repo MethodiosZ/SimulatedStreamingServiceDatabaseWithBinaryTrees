@@ -63,12 +63,12 @@ void initialize(){
 	categoryArray[4] = NULL;
 	categoryArray[5] = NULL;
 	hashtable_size=max_id/max_users;
-	int i;
-	user_t *init_users[hashtable_size];
+	int i=0;
+	user_hashtable_p=(user_t**)malloc(sizeof(user_t*)*hashtable_size);
 	for(i=0;i<hashtable_size;i++){
-		init_users[i]=NULL;
+		user_hashtable_p[i] = malloc(sizeof(user_t));
+		user_hashtable_p[i] = NULL;
 	}
-	user_hashtable_p=init_users;
 }
 
 
@@ -117,6 +117,15 @@ int main(int argc, char** argv)
 			sscanf(buff, "%c %d", &event, &userID);
 			DPRINT("%c %d\n", event, userID);
 			if ( register_user(userID) ) {
+				int j;
+				user_t *rep;
+				j=hash_function(userID);
+				rep=user_hashtable_p[j];
+				printf("Chain <%d> of Users:\n",j);
+				while(rep!=NULL){
+					printf("\t<%d>\n",rep->userID);
+					rep=rep->next;
+				}
 				DPRINT("DONE\n");
 			} else {
 				fprintf(stderr, "%c failed\n", event);
