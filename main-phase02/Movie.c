@@ -33,8 +33,9 @@
 		newuser->next=user_hashtable_p[key];
 		newuser->userID=userID;
 		user_hashtable_p[key]=newuser;
+		return 1;
 	} 
-	return 1;
+	return 0;
  }
  
 /**
@@ -154,7 +155,28 @@
  */
 
  int print_users(void){
-	 return 1;
+	int i;
+	user_t **rep1;
+	user_t *rep2;
+	userMovie_t *temp;
+	rep1=user_hashtable_p;
+	for(i=0;i<hashtable_size;i++){
+		printf("Chain <%d> of Users:\n",i);
+		rep2=rep1[i];
+		while(rep2!=NULL){
+			printf("\t<%d>\n",rep2->userID);
+			printf("\tHistory Tree:\n");
+			temp=rep2->history;
+			while(temp!=NULL){
+				printf("\t\t<%d> <%d>\n",temp->movieID,temp->score);
+				temp=temp->lc;
+			}
+			rep2=rep2->next;
+		}	
+	}
+	
+	
+	return 1;
  }
  
  int hash_function(int userID){
