@@ -162,13 +162,17 @@ int main(int argc, char** argv)
 			int movieID,category, year;
 			sscanf(buff, "%c %d %d %d", &event, &movieID, &category, &year);
 			DPRINT("%c %d %d %d\n", event, movieID, category, year);
-
 			if ( add_new_movie(movieID, category, year) ) {
-				DPRINT("%c %d %d %d succeeded\n", event, movieID, category, year);
+				printf("New releases Tree:\n\t<new_releases>: ");
+				new_movie_t *rep = new_releases;
+				while(rep!=NULL){
+					printf("<%d>, ",rep->movieID);
+					rep=rep->lc;
+				}
+				DPRINT("\nDONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d %d failed\n", event, movieID, category, year);
 			}
-
 			break;
 		}
 		/* Event D : D  - Distribute movies. */
@@ -178,7 +182,7 @@ int main(int argc, char** argv)
 			DPRINT("%c\n", event);
 
 			if ( distribute_movies() ) {
-				DPRINT("%c succeeded\n", event);
+				DPRINT("DONE\n");
 			} else {
 				fprintf(stderr, "%c failed\n", event);
 			}
@@ -194,7 +198,7 @@ int main(int argc, char** argv)
 			DPRINT("%c %d %d %d %d\n", event,userID, category, movieID, score);
 
 			if ( watch_movie(userID,category, movieID, score) ) {
-				DPRINT("%c %d %d %d %d succeeded\n", event,userID, category, movieID, score);
+				DPRINT("DONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d %d %d failed\n", event, userID,category, movieID, score);
 			}
@@ -209,7 +213,7 @@ int main(int argc, char** argv)
 			DPRINT("%c %d %d\n", event, userID,score);
 
 			if (filter_movies(userID,score) ) {
-				DPRINT("%c %d %d succeeded\n", event, userID,score);
+				DPRINT("DONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d failed\n", event, userID,score);
 			}
@@ -224,7 +228,7 @@ int main(int argc, char** argv)
 			DPRINT("%c %d\n", event, userID);
 
 			if ( user_stats(userID) ) {
-				DPRINT("%c %d succeeded\n", event, userID);
+				DPRINT("DONE\n");
 			} else {
 				fprintf(stderr, "%c %d failed\n", event, userID);
 			}
@@ -239,7 +243,7 @@ int main(int argc, char** argv)
 			DPRINT("%c %d %d\n", event, movieID, category);
 
 			if ( search_movie(movieID, category) ) {
-				DPRINT("%c %d %d succeeded\n", event, movieID, category);
+				DPRINT("DONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d failed\n", event, movieID, category);
 			}
@@ -253,7 +257,7 @@ int main(int argc, char** argv)
 			DPRINT("%c\n", event);
 
 			if ( print_movies() ) {
-				DPRINT("%c succeeded\n", event);
+				DPRINT("DONE\n");
 			} else {
 				fprintf(stderr, "%c failed\n", event);
 			}

@@ -4,7 +4,7 @@
  *                                                   *
  * @brief Implementation for Movie.h 				 *
  * Project: Winter 2023						         *
- *****************************************************/
+*****************************************************/
 #include "Movie.h"
 
 /**
@@ -15,9 +15,8 @@
  *
  * @return 1 on success
  *         0 on failure
- */
-
- int register_user(int userID){
+*/
+int register_user(int userID){
 	int key;
 	key=hash_function(userID);
 	user_t *newuser = (user_t*)malloc(sizeof(user_t));
@@ -36,7 +35,7 @@
 		return 1;
 	} 
 	return 0;
- }
+}
  
 /**
  * @brief Deletes a user.
@@ -46,9 +45,8 @@
  *
  * @return 1 on success
  *         0 on failure
- */
-
- int unregister_user(int userID){
+*/
+int unregister_user(int userID){
 	int key;
 	key=hash_function(userID);
 	if(user_hashtable_p[key]->userID==userID){
@@ -72,9 +70,9 @@
 		}
 	}
 	return 0;
- }
+}
  
- /**
+/**
  * @brief Add new movie to new release binary tree.
  * Create a node movie and insert it in 'new release' binary tree.
  *
@@ -84,24 +82,39 @@
  *
  * @return 1 on success
  *         0 on failure
- */
-
- int add_new_movie(int movieID, int category, int year){
-	 return 1;
- }
+*/
+int add_new_movie(int movieID, int category, int year){
+	new_movie_t *newmovie = (new_movie_t*)malloc(sizeof(new_movie_t));
+	new_movie_t *list;
+	newmovie->category=category;
+	newmovie->movieID=movieID;
+	newmovie->year=year;
+	newmovie->sumScore=0;
+	newmovie->watchedCounter=0; 
+	list=new_releases;
+	if(list==NULL){
+		newmovie->rc=NULL;
+		newmovie->lc=NULL;
+		new_releases=newmovie;
+		return 1;
+	}
+	else{
+		
+	}
+	return 1;
+}
  
- /**
+/**
  * @brief Distribute the movies from new release binary tree to the array of categories.
  *
  * @return 0 on success
  *         1 on failure
- */
-
- int distribute_movies(void){
+*/
+int distribute_movies(void){
 	 return 1;
- }
+}
  
- /**
+/**
  * @brief User rates the movie with identification movieID with score
  *
  * @param userID The identifier of the user
@@ -111,11 +124,10 @@
  *
  * @return 1 on success
  *         0 on failure
- */
-
- int watch_movie(int userID,int category, int movieID, int score){
+*/
+int watch_movie(int userID,int category, int movieID, int score){
 	 return 1;
- }
+}
  
 /**
  * @brief Identify the best rating score movie and cluster all the movies of a category.
@@ -126,10 +138,9 @@
  * @return 1 on success
  *         0 on failure
  */
-
- int filter_movies(int userID, int score){
+int filter_movies(int userID, int score){
 	 return 1;
- }
+}
  
 /**
  * @brief Find movies from categories withn median_score >= score t
@@ -140,11 +151,10 @@
  *
  * @return 1 on success
  *         0 on failure
- */
-
- int user_stats(int userID){
+*/
+int user_stats(int userID){
 	 return 1;
- }
+}
  
 /**
  * @brief Search for a movie with identification movieID in a specific category.
@@ -154,29 +164,26 @@
  *
  * @return 1 on success
  *         0 on failure
- */
-
- int search_movie(int movieID, int category){
+*/
+int search_movie(int movieID, int category){
 	 return 1;
- }
+}
  
  /**
  * @brief Prints the movies in movies categories array.
  * @return 1 on success
  *         0 on failure
- */
-
- int print_movies(void){
+*/
+int print_movies(void){
 	 return 1;
- }
+}
  
-  /**
+/**
  * @brief Prints the users hashtable.
  * @return 1 on success
  *         0 on failure
- */
-
- int print_users(void){
+*/
+int print_users(void){
 	int i;
 	user_t **rep1;
 	user_t *rep2;
@@ -199,9 +206,9 @@
 	
 	
 	return 1;
- }
+}
  
- int hash_function(int userID){
+int hash_function(int userID){
 	int i=0,p=primes_g[0];
 	while(i<170&&p<max_id){
 		p=primes_g[i];
