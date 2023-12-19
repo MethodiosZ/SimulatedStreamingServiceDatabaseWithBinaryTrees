@@ -55,18 +55,24 @@ new_movie_t *new_releases;     /* New releases simply-linked binary tree*/
 movieCategory_t *categoryArray[6];  /* The categories array (pinakas kathgoriwn)*/
 
 void initialize(){
+	int i;
 	new_releases = NULL;
-	categoryArray[0] = NULL;
-	categoryArray[1] = NULL;
-	categoryArray[2] = NULL;
-	categoryArray[3] = NULL;
-	categoryArray[4] = NULL;
-	categoryArray[5] = NULL;
+	for(i=0;i<6;i++){
+		categoryArray[i]=(movieCategory_t*)malloc(sizeof(movieCategory_t));
+		categoryArray[i]->movie=NULL;
+		movie_t *sentinel = (movie_t*)malloc(sizeof(movie_t));
+		sentinel->movieID=-1;
+		sentinel->year=0;
+		sentinel->watchedCounter=0;
+		sentinel->sumScore=0;
+		sentinel->lc=NULL;
+		sentinel->rc=NULL;
+		categoryArray[i]->sentinel=sentinel;
+	}
 	hashtable_size=max_id/max_users;
-	int i=0;
 	user_hashtable_p=(user_t**)malloc(sizeof(user_t*)*hashtable_size);
 	for(i=0;i<hashtable_size;i++){
-		user_hashtable_p[i] = malloc(sizeof(user_t));
+		user_hashtable_p[i] = (user_t*)malloc(sizeof(user_t));
 		user_hashtable_p[i] = NULL;
 	}
 }
@@ -165,11 +171,7 @@ int main(int argc, char** argv)
 			if ( add_new_movie(movieID, category, year) ) {
 				printf("New releases Tree:\n\t<new_releases>: ");
 				new_movie_t *rep = new_releases;
-				inorderprint(rep);
-				/*while(rep!=NULL){
-					printf("<%d>, ",rep->movieID);
-					rep=rep->lc;
-				}*/
+				inordernewmovieprint(rep);
 				DPRINT("\nDONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d %d failed\n", event, movieID, category, year);
@@ -181,9 +183,15 @@ int main(int argc, char** argv)
 		{
 			sscanf(buff, "%c", &event);
 			DPRINT("%c\n", event);
-
 			if ( distribute_movies() ) {
-				DPRINT("DONE\n");
+				int i;
+				printf("Movie Category Array:");
+				for(i=0;i<6;i++){
+					movieCategory_t *rep = categoryArray[i];
+					printf("\n\t<%s>: ",getMovieCategory(i));
+					inordermovieprint(rep->movie);
+				}
+				DPRINT("\nDONE\n");
 			} else {
 				fprintf(stderr, "%c failed\n", event);
 			}
@@ -270,7 +278,6 @@ int main(int argc, char** argv)
 		{
 			sscanf(buff, "%c", &event);
 			DPRINT("%c\n", event);
-
 			if ( print_users() ) {
 				DPRINT("DONE\n");
 			} else {

@@ -205,6 +205,14 @@ extern int primes_g[170];
  
  int hash_function(int userID);
 
- void inorderprint(new_movie_t *p);
+ void inordernewmovieprint(new_movie_t *p);
+
+ void inordermovieprint(movie_t *p);
+
+ const char* getMovieCategory(Category_t category);
+
+ void recdistribute(new_movie_t *p);
+
+ void categorize(new_movie_t *p);
   
  #endif

@@ -127,7 +127,12 @@ int add_new_movie(int movieID, int category, int year){
  *         1 on failure
 */
 int distribute_movies(void){
-	 return 1;
+	new_movie_t *rep = new_releases;
+	if(rep!=NULL){
+		recdistribute(rep);
+		return 1;
+	}
+	return 0;
 }
  
 /**
@@ -233,9 +238,51 @@ int hash_function(int userID){
 	return (userID%p)%hashtable_size;
 }
 
-void inorderprint(new_movie_t *p){
+void inordernewmovieprint(new_movie_t *p){
 	if(p==NULL) return;
-	inorderprint(p->lc);
+	inordernewmovieprint(p->lc);
 	printf("<%d>, ",p->movieID);
-	inorderprint(p->rc);
+	inordernewmovieprint(p->rc);
+}
+
+void inordermovieprint(movie_t *p){
+	if(p==NULL) return;
+	inordermovieprint(p->lc);
+	if(p->movieID!=-1) printf("<%d>, ",p->movieID);
+	inordermovieprint(p->rc);
+}
+
+const char* getMovieCategory(Category_t category){
+    switch(category){
+        case HORROR: return "Horror";
+        case SCIFI: return "Sci-fi";
+        case DRAMA: return "Drama";
+        case ROMANCE: return "Romance";
+        case DOCUMENTARY: return "Documentary";
+        case COMEDY: return "Comedy";
+    }
+}
+
+void recdistribute(new_movie_t *p){
+	if(p==NULL) return;
+	recdistribute(p->lc);
+	categorize(p);
+	recdistribute(p->rc);
+}
+
+void categorize(new_movie_t *p){
+	movie_t *addmovie = (movie_t*)malloc(sizeof(movie_t));
+	addmovie->movieID=p->movieID;
+	addmovie->sumScore=p->sumScore;
+	addmovie->watchedCounter=p->watchedCounter;
+	addmovie->year=p->year;
+	if(categoryArray[p->category]->movie==NULL){
+		addmovie->lc=categoryArray[p->category]->sentinel;
+		addmovie->rc=categoryArray[p->category]->sentinel;
+		categoryArray[p->category]->movie=addmovie;
+	}
+	else{
+
+	}
+	free(p);
 }
