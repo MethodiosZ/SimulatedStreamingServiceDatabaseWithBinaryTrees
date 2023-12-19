@@ -85,23 +85,39 @@ int unregister_user(int userID){
 */
 int add_new_movie(int movieID, int category, int year){
 	new_movie_t *newmovie = (new_movie_t*)malloc(sizeof(new_movie_t));
-	new_movie_t *list;
 	newmovie->category=category;
 	newmovie->movieID=movieID;
 	newmovie->year=year;
 	newmovie->sumScore=0;
 	newmovie->watchedCounter=0; 
-	list=new_releases;
-	if(list==NULL){
-		newmovie->rc=NULL;
-		newmovie->lc=NULL;
+	newmovie->rc=NULL;
+	newmovie->lc=NULL;
+	if(new_releases==NULL){
 		new_releases=newmovie;
 		return 1;
 	}
 	else{
-		
+		new_movie_t *list,*prev;
+		list=new_releases;
+		while(list!=NULL){
+			prev=list;
+			if(movieID<list->movieID){
+				list=list->lc;
+			}
+			else{
+				list=list->rc;
+			}
+		}
+		if(movieID<prev->movieID){
+			prev->lc=newmovie;
+			return 1;
+		}
+		else{
+			prev->rc=newmovie;
+			return 1;
+		}
 	}
-	return 1;
+	return 0;
 }
  
 /**
@@ -215,4 +231,11 @@ int hash_function(int userID){
 		i++;
 	}
 	return (userID%p)%hashtable_size;
+}
+
+void inorderprint(new_movie_t *p){
+	if(p==NULL) return;
+	inorderprint(p->lc);
+	printf("<%d>, ",p->movieID);
+	inorderprint(p->rc);
 }

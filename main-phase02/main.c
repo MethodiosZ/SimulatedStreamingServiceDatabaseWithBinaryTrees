@@ -165,10 +165,11 @@ int main(int argc, char** argv)
 			if ( add_new_movie(movieID, category, year) ) {
 				printf("New releases Tree:\n\t<new_releases>: ");
 				new_movie_t *rep = new_releases;
-				while(rep!=NULL){
+				inorderprint(rep);
+				/*while(rep!=NULL){
 					printf("<%d>, ",rep->movieID);
 					rep=rep->lc;
-				}
+				}*/
 				DPRINT("\nDONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d %d failed\n", event, movieID, category, year);
