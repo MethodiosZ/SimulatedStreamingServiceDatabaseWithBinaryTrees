@@ -187,7 +187,16 @@ int user_stats(int userID){
  *         0 on failure
 */
 int search_movie(int movieID, int category){
-	 return 1;
+	movie_t *query = categoryArray[category]->movie;
+	while(query->movieID!=-1&&query->movieID!=movieID){
+		if(movieID<query->movieID) query=query->lc;
+		else query=query->rc;
+	}
+	if(query!=NULL){
+		printf(" <%d>\n",query->year);
+		return 1;
+	}
+	return 0;
 }
  
  /**
