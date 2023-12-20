@@ -264,9 +264,8 @@ int main(int argc, char** argv)
 		{
 			sscanf(buff, "%c", &event);
 			DPRINT("%c\n", event);
-
 			if ( print_movies() ) {
-				DPRINT("DONE\n");
+				DPRINT("\nDONE\n");
 			} else {
 				fprintf(stderr, "%c failed\n", event);
 			}

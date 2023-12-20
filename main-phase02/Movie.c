@@ -196,7 +196,14 @@ int search_movie(int movieID, int category){
  *         0 on failure
 */
 int print_movies(void){
-	 return 1;
+	int i;
+	printf("Movie Category Array:");
+	for(i=0;i<6;i++){
+		movieCategory_t *rep = categoryArray[i];
+		printf("\n\t<%s>: ",getMovieCategory(i));
+		inordermovieprint(rep->movie);
+	}
+	return 1;
 }
  
 /**
