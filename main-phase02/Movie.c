@@ -224,8 +224,6 @@ int print_users(void){
 			rep2=rep2->next;
 		}	
 	}
-	
-	
 	return 1;
 }
  
@@ -276,13 +274,29 @@ void categorize(new_movie_t *p){
 	addmovie->sumScore=p->sumScore;
 	addmovie->watchedCounter=p->watchedCounter;
 	addmovie->year=p->year;
+	addmovie->lc=categoryArray[p->category]->sentinel;
+	addmovie->rc=categoryArray[p->category]->sentinel;
 	if(categoryArray[p->category]->movie==NULL){
-		addmovie->lc=categoryArray[p->category]->sentinel;
-		addmovie->rc=categoryArray[p->category]->sentinel;
 		categoryArray[p->category]->movie=addmovie;
 	}
 	else{
-
+		movie_t *list,*prev;
+		list=categoryArray[p->category]->movie;
+		while(list->movieID!=-1){
+			prev=list;
+			if(p->movieID<list->movieID){
+				list=list->lc;
+			}
+			else{
+				list=list->rc;
+			}
+		}
+		if(p->movieID<prev->movieID){
+			prev->lc=addmovie;
+		}
+		else{
+			prev->rc=addmovie;
+		}
 	}
 	free(p);
 }

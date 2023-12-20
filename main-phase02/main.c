@@ -249,10 +249,10 @@ int main(int argc, char** argv)
 		{
 			int movieID,category;
 			sscanf(buff, "%c %d %d\n", &event, &movieID, &category);
-			DPRINT("%c %d %d\n", event, movieID, category);
+			DPRINT("%c %d %d", event, movieID, category);
 
 			if ( search_movie(movieID, category) ) {
-				DPRINT("DONE\n");
+				DPRINT("\nDONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d failed\n", event, movieID, category);
 			}
