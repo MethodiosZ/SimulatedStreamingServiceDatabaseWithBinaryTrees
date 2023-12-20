@@ -202,16 +202,22 @@ int main(int argc, char** argv)
 		case 'W':
 		{
 			int userID, movieID,category,score;
-
 			sscanf(buff, "%c %d %d %d %d", &event,&userID,&category, &movieID, &score);
 			DPRINT("%c %d %d %d %d\n", event,userID, category, movieID, score);
-
 			if ( watch_movie(userID,category, movieID, score) ) {
-				DPRINT("DONE\n");
+				printf("History Tree of user %d:",userID);
+				int key;
+				user_t *wuser;
+				key=hash_function(userID);
+				wuser=user_hashtable_p[key];
+				while(wuser->userID!=userID&&wuser!=NULL){
+					wuser=wuser->next;
+				}
+				inorderusermovieprint(wuser->history);
+				DPRINT("\nDONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d %d %d failed\n", event, userID,category, movieID, score);
 			}
-
 			break;
 		}
 		/* Event –	F  <userID ><category1><category2><score> Filter movies */
@@ -234,8 +240,7 @@ int main(int argc, char** argv)
 		{
 			int userID;
 			sscanf(buff, "%c %d\n", &event, &userID);
-			DPRINT("%c %d\n", event, userID);
-
+			DPRINT("%c %d", event, userID);
 			if ( user_stats(userID) ) {
 				DPRINT("DONE\n");
 			} else {

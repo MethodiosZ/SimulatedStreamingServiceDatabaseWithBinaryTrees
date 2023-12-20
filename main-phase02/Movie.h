@@ -214,5 +214,7 @@ extern int primes_g[170];
  void recdistribute(new_movie_t *p);
 
  void categorize(new_movie_t *p);
+
+ void inorderusermovieprint(userMovie_t *p);
   
  #endif

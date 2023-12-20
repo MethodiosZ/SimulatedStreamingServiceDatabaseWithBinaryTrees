@@ -49,7 +49,7 @@ int register_user(int userID){
 int unregister_user(int userID){
 	int key;
 	key=hash_function(userID);
-	if(user_hashtable_p[key]->userID==userID){
+	if(user_hashtable_p[key]->userID==userID){ /*Needs Changes*/
 		/*Delete history*/
 		user_hashtable_p[key]=user_hashtable_p[key]->next;
 		return 1;
@@ -147,7 +147,32 @@ int distribute_movies(void){
  *         0 on failure
 */
 int watch_movie(int userID,int category, int movieID, int score){
-	 return 1;
+	movie_t *query = categoryArray[category]->movie;
+	while(query->movieID!=-1&&query->movieID!=movieID){
+		if(movieID<query->movieID) query=query->lc;
+		else query=query->rc;
+	}
+	if(query!=NULL){
+		query->watchedCounter++;
+		query->sumScore+=score;
+	}
+	userMovie_t *watched = (userMovie_t*)malloc(sizeof(userMovie_t));
+	watched->movieID=movieID;
+	watched->category=category;
+	watched->score=score;
+	int key;
+	key=hash_function(userID);
+	user_t *wuser = user_hashtable_p[key];
+	while(wuser->userID!=userID&&wuser!=NULL){
+		wuser=wuser->next;
+	}
+	if(wuser->history==NULL){ /*Needs Changes*/
+		watched->parent=NULL;
+		watched->lc=NULL;
+		watched->rc=NULL;
+		wuser->history=watched;
+		return 1;
+	}
 }
  
 /**
@@ -174,7 +199,21 @@ int filter_movies(int userID, int score){
  *         0 on failure
 */
 int user_stats(int userID){
-	 return 1;
+	int key;
+	key=hash_function(userID);
+	user_t *wuser = user_hashtable_p[key];
+	while(wuser->userID!=userID&&wuser!=NULL){
+		wuser=wuser->next;
+	}
+	userMovie_t *tree = wuser->history;
+	int ScoreSum=0,counter=0;
+	while (tree!=NULL){ /*Needs Changes*/
+		ScoreSum+=tree->score;
+		counter++;
+		tree=tree->lc;
+	}
+	printf(" <%d>\n",ScoreSum/counter);
+	return 1;
 }
  
 /**
@@ -315,4 +354,11 @@ void categorize(new_movie_t *p){
 		}
 	}
 	free(p);
+}
+
+void inorderusermovieprint(userMovie_t *p){
+	if(p==NULL) return;
+	inorderusermovieprint(p->lc);
+	if(p->movieID!=-1) printf("\n\t<%d, %d>",p->movieID,p->score);
+	inorderusermovieprint(p->rc);
 }
