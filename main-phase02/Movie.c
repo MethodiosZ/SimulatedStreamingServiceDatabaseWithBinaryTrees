@@ -160,19 +160,49 @@ int watch_movie(int userID,int category, int movieID, int score){
 	watched->movieID=movieID;
 	watched->category=category;
 	watched->score=score;
+	watched->lc=NULL;
+		watched->rc=NULL;
 	int key;
 	key=hash_function(userID);
 	user_t *wuser = user_hashtable_p[key];
 	while(wuser->userID!=userID&&wuser!=NULL){
 		wuser=wuser->next;
 	}
-	if(wuser->history==NULL){ /*Needs Changes*/
+	if(wuser->history==NULL){
 		watched->parent=NULL;
-		watched->lc=NULL;
-		watched->rc=NULL;
 		wuser->history=watched;
 		return 1;
 	}
+	else {
+		userMovie_t *list = wuser->history,*parent;
+		while(list->lc!=NULL){
+			if(movieID<list->movieID){
+				list=list->lc;
+			}
+			else{
+				list=list->rc;
+			}
+		}
+		userMovie_t *copy = (userMovie_t*)malloc(sizeof(userMovie_t));
+		copy->category=list->category;
+		copy->movieID=list->movieID;
+		copy->score=list->score;
+		copy->lc=NULL;
+		copy->rc=NULL;
+		copy->parent=list;
+		watched->parent=list;
+		if(movieID<list->movieID){
+			list->lc=watched;
+			list->rc=copy;
+			return 1;
+		}
+		else{
+			list->lc=copy;
+			list->rc=watched;
+			return 1;
+		}
+	}
+	return 0;
 }
  
 /**
@@ -359,6 +389,6 @@ void categorize(new_movie_t *p){
 void inorderusermovieprint(userMovie_t *p){
 	if(p==NULL) return;
 	inorderusermovieprint(p->lc);
-	if(p->movieID!=-1) printf("\n\t<%d, %d>",p->movieID,p->score);
+	if(p->lc==NULL) printf("\n\t<%d, %d>",p->movieID,p->score);
 	inorderusermovieprint(p->rc);
 }
