@@ -215,7 +215,13 @@ int watch_movie(int userID,int category, int movieID, int score){
  *         0 on failure
  */
 int filter_movies(int userID, int score){
-	 return 1;
+	int numMovies=0,i;
+	for(i=0;i<6;i++){
+		movieCategory_t *movies = categoryArray[i];
+		recAvgScore(movies->movie,&numMovies, score);
+	}
+	printf("%d\n",numMovies); /*Initialize Helper Array and sort it*/
+	return 1;
 }
  
 /**
@@ -237,11 +243,7 @@ int user_stats(int userID){
 	}
 	userMovie_t *tree = wuser->history;
 	int ScoreSum=0,counter=0;
-	while (tree!=NULL){ /*Needs Changes*/
-		ScoreSum+=tree->score;
-		counter++;
-		tree=tree->lc;
-	}
+	recstats(tree,&ScoreSum,&counter);
 	printf(" <%d>\n",ScoreSum/counter);
 	return 1;
 }
@@ -329,9 +331,9 @@ void inordernewmovieprint(new_movie_t *p){
 }
 
 void inordermovieprint(movie_t *p){
-	if(p==NULL) return;
+	if(p->movieID==-1) return;
 	inordermovieprint(p->lc);
-	if(p->movieID!=-1) printf("<%d>, ",p->movieID);
+	printf("<%d>, ",p->movieID);
 	inordermovieprint(p->rc);
 }
 
@@ -391,4 +393,25 @@ void inorderusermovieprint(userMovie_t *p){
 	inorderusermovieprint(p->lc);
 	if(p->lc==NULL) printf("\n\t<%d, %d>",p->movieID,p->score);
 	inorderusermovieprint(p->rc);
+}
+
+void recstats(userMovie_t *p, int *ScoreSum, int *counter){
+	if(p==NULL) return;
+	recstats(p->lc, ScoreSum, counter);
+	if(p->lc==NULL){
+		*ScoreSum=*ScoreSum+p->score;
+		*counter=*counter+1;
+	}
+	recstats(p->rc, ScoreSum, counter);
+}
+
+void recAvgScore(movie_t *p, int *numMovies, int basescore){
+	if(p->movieID==-1) return;
+	recAvgScore(p->lc,numMovies,basescore);
+	if(p->watchedCounter>0){
+		if(p->sumScore/p->watchedCounter > basescore){
+			*numMovies=*numMovies+1;
+		}
+	}
+	recAvgScore(p->rc,numMovies,basescore);
 }

@@ -216,5 +216,9 @@ extern int primes_g[170];
  void categorize(new_movie_t *p);
 
  void inorderusermovieprint(userMovie_t *p);
-  
- #endif
+ 
+ void recstats(userMovie_t *p, int* ScoreSum, int* counter);
+
+ void recAvgScore(movie_t *p, int* numMovies, int basescore);
+
+#endif

@@ -226,9 +226,8 @@ int main(int argc, char** argv)
 			int userID, score;
 			sscanf(buff, "%c %d %d\n", &event, &userID,&score);
 			DPRINT("%c %d %d\n", event, userID,score);
-
 			if (filter_movies(userID,score) ) {
-				DPRINT("DONE\n");
+				DPRINT("\nDONE\n");
 			} else {
 				fprintf(stderr, "%c %d %d failed\n", event, userID,score);
 			}
