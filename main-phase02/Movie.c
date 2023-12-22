@@ -220,7 +220,20 @@ int filter_movies(int userID, int score){
 		movieCategory_t *movies = categoryArray[i];
 		recAvgScore(movies->movie,&numMovies, score);
 	}
-	printf("%d\n",numMovies); /*Initialize Helper Array and sort it*/
+	movie_t *filtered[numMovies];
+	int avgScore[numMovies];
+	for(i=0;i<numMovies;i++){
+		filtered[i]=(movie_t*)malloc(sizeof(movie_t));
+		filtered[i]=NULL;
+	}
+	for(i=0;i<6;i++){
+		movieCategory_t *movies = categoryArray[i];
+		recInitFiltered(movies->movie,filtered,avgScore,numMovies,score);
+	}
+	HeapSort(filtered,avgScore,numMovies);
+	for(i=0;i<numMovies;i++){
+		printf("<%d><%d>, ",filtered[i]->movieID,avgScore[i]);
+	}
 	return 1;
 }
  
@@ -414,4 +427,58 @@ void recAvgScore(movie_t *p, int *numMovies, int basescore){
 		}
 	}
 	recAvgScore(p->rc,numMovies,basescore);
+}
+
+void recInitFiltered(movie_t *p, movie_t **filterd,int *avgScore,int numMovies, int basescore){
+	if(p->movieID==-1) return;
+	recInitFiltered(p->lc,filterd,avgScore,numMovies,basescore);
+	if(p->watchedCounter>0){
+		if(p->sumScore/p->watchedCounter > basescore){
+			int i=0;
+			while(i<numMovies){
+				if(filterd[i]==NULL){
+					avgScore[i]=p->sumScore/p->watchedCounter;
+					filterd[i]=p;
+					break;
+				}
+				i++;
+			}
+		}
+	}
+	recInitFiltered(p->rc,filterd,avgScore,numMovies,basescore);
+}
+
+void HeapSort(movie_t **filterd, int *avgScore, int numMovies){
+	int i;
+	for(i=numMovies-1;i>=0;i--){
+		Heapify(filterd,avgScore,numMovies,i);
+	}
+	for(i=numMovies-1;i>=0;i--){
+		swap(&avgScore[0],&avgScore[i]);
+		swapmovies(filterd[0],filterd[i]);
+		Heapify(filterd,avgScore,i,0);
+	}
+}
+
+void Heapify(movie_t **filterd, int *avgScore, int numMovies, int i){
+	int large =i,left=2*i+1,right=2*i+2;
+	if(left<numMovies&&avgScore[left]>avgScore[large]) large=left;
+	if(right<numMovies&&avgScore[right]>avgScore[large]) large=right;
+	if(large!=i){
+		swap(&avgScore[i],&avgScore[large]);
+		swapmovies(filterd[i],filterd[large]);
+		Heapify(filterd,avgScore,numMovies,large);
+	}
+}
+
+void swap(int *a, int *b){
+	int temp=*a;
+	*a=*b;
+	*b=temp;
+}
+
+void swapmovies(movie_t *a, movie_t *b){
+	movie_t *temp=a;
+	a=b;
+	b=temp;
 }

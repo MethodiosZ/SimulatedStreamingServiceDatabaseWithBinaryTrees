@@ -221,4 +221,14 @@ extern int primes_g[170];
 
  void recAvgScore(movie_t *p, int* numMovies, int basescore);
 
+ void recInitFiltered(movie_t *p, movie_t **filterd,int *avgScore,int numMovies, int basescore);
+
+ void HeapSort(movie_t **filterd,int *avgScore,int numMovies);
+
+ void Heapify(movie_t **filterd, int *avgScore, int numMovies, int i);
+
+ void swap(int *a,int *b);
+
+ void swapmovies(movie_t *a,movie_t *b);
+
 #endif
