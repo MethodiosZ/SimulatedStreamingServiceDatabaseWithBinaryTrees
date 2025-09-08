@@ -1,11 +1,3 @@
-/*****************************************************
- * @file   main.c                                    *
- * @author Methodios Zacharioudakis csd4384          *
- *                                                   *
- * @brief Main Function for Data Structures (CS240b) *
- * Project: Winter 2023						         *
- *****************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,8 +21,8 @@ int hashtable_size;    /** The size of the users hashtable (>0) */
 int max_users;         /** The maximum number of registrations (users) */
 int max_id;            /** The maximum user ID */
 
-// This is a very conservative progress on the hashtable. Our purpose
-// is to force many rehashes to check the stability of the code.
+/* This is a very conservative progress on the hashtable. Our purpose
+is to force many rehashes to check the stability of the code. */
 int primes_g[170] = 		{  5,   7,  11,  13,  17,  19,  23,  29,  31,  37,
                                41,  43,  47,  53,  59,  61,  67,  71,  73,  79,
                                83,  89,  97, 101, 103, 107, 109, 113, 127, 131,
